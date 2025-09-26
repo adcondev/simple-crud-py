@@ -14,7 +14,11 @@ engine = create_engine(
 
 def create_tables():
     """ Crear las tablas en la base de datos """
-    Base.metadata.create_all(engine)
+    try:
+        Base.metadata.create_all(engine)
+        print("✅ Tablas creadas correctamente")
+    except Exception as e:
+        print(f"❌ Error al crear tablas: {e}")
 
 
 def get_session():

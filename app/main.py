@@ -66,7 +66,3 @@ async def health_check():
         "status": "healthy",
         "database_connected": ping_database()
     }
-
-
-if __name__ == "__main__":
-    create_tables()
