@@ -8,3 +8,10 @@ class Usuario(SQLModel, table=True):
     username: str
     email: str
     hashed_password: str
+
+
+# Modelo para crear un usuario (sin id, que es autogenerado)
+class UsuarioCrear(SQLModel):
+    username: str
+    email: str
+    password: str  # Contraseña, se debe hashear antes de guardar
