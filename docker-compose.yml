@@ -1,0 +1,39 @@
+# Un docker-compose sirve para definir y ejecutar aplicaciones Docker de múltiples contenedores.
+# Si es solo uno, ayuda a mantener el entorno consistente entre diferentes máquinas.
+
+# Lo que se ejecutara en los contenedores
+services:
+  app: # Servicio de la API
+    build:
+      context: . # Cambiar a directorio raíz donde está pyproject.toml
+      dockerfile: Dockerfile # Especificar la ruta completa al Dockerfile
+    ports:
+      - "8000:8000" # Mapea el puerto 8000 del contenedor al puerto 8000 del host
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db/simple_crud_db
+      - ENVIRONMENT=prod # Variable para identificar entorno de producción
+    depends_on:
+      - db # Asegura que el servicio de la base de datos se inicie antes que la app
+    restart: unless-stopped # Reinicia el contenedor a menos que se detenga manualmente
+
+  # Servicio de la base de datos PostgreSQL, te lo instala y configura automáticamente
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Volumen persistente para almacenar los datos de la DB
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=simple_crud_db # Crear la base de datos específica
+    ports:
+      - "5432:5432" # Mapea el puerto 5432 del contenedor al puerto 5432 del host
+    # Verifica que la base de datos esté lista antes de considerar el contenedor como "saludable"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes: # Definición de volúmenes persistentes.
+  postgres-data:

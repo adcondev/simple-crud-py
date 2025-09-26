@@ -1,0 +1,40 @@
+# Diferencias clave con la versión de producción:
+# 1. Usa Dockerfile (más liviano, sin copiar archivos)
+# 2. Monta volúmenes para sincronización en tiempo real
+# 3. No ejecuta la app automáticamente para permitir control manual
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile # Dockerfile específico para desarrollo
+    volumes:
+      # Sincronización bidireccional: cambios en VSCode se reflejan en el contenedor
+      - .:/app
+    ports:
+      - "8000:8000" # Puerto de la API FastAPI
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db/simple_crud_db
+      - ENVIRONMENT=dev # Variable para identificar entorno de desarrollo
+    depends_on:
+      - db
+    # SIN restart automático para permitir debugging y control manual
+    command: sleep infinity # Mantiene el contenedor vivo sin ejecutar la app
+
+  db:
+    image: postgres:latest
+    volumes:
+      # Script SQL para inicializar la base de datos automáticamente
+      - ./sql:/docker-entrypoint-initdb.d/
+      # Volumen específico para desarrollo (separado de producción)
+      - postgres-data-dev:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      # Base de datos se creará automáticamente por el script en sql/
+    ports:
+      - "5432:5432" # Puerto para conectar desde herramientas externas (pgAdmin, etc.)
+    restart: unless-stopped
+
+volumes:
+  postgres-data-dev: # Volumen específico para desarrollo
