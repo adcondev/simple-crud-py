@@ -1,22 +1,18 @@
 from sqlmodel import SQLModel, Field
 
-# Definición del modelo de datos para un libro
-# Un modelo es una representación de una tabla en la base de datos
-# Es un ORM (Object-Relational Mapping): Mapeo entre objetos y tablas
+# Modelo de libro - Representa una tabla en PostgreSQL
 class Libro(SQLModel, table=True):
-    """ Modelo de datos para un libro """
-    # Básicamente es una tabla con columnas
+    """Modelo principal para la gestión de libros"""
     id: int | None = Field(default=None, primary_key=True)
-    title: str  # Obligatorio
-    author: str
-    pages: int | None = None
-    description: str | None = None  # "| None = None" indica que puede ser nulo
+    title: str  # Título obligatorio
+    author: str  # Autor obligatorio
+    pages: int | None = None  # Páginas opcional
+    description: str | None = None  # Descripción opcional
 
 
-# Modelo para crear un libro (sin id, que es autogenerado)
-# Se usará en las solicitudes POST, esto valida la entrada de datos en el JSON
-# Al menos title y author son obligatorios, el resto es opcional
+# Modelo para crear libros - Sin ID (se autogenera)
 class LibroCrear(SQLModel):
+    """Modelo para validar datos al crear/actualizar libros"""
     title: str
     author: str
     pages: int | None = None

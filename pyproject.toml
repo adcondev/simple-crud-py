@@ -1,24 +1,24 @@
 [tool.poetry]
+# Poetry permite gestionar dependencias y empaquetar proyectos Python de manera sencilla.
 name = "simple-crud-py"
 version = "0.1.0"
-description = "Simple CRUD con FastAPI y SQLModel con PostgreSQL como base de datos."
+description = "Simple CRUD con FastAPI y SQLModel con PostgreSQL como base de datos para gestión de libros."
 authors = ["Adrián Constante <ad_con.reload@proton.me>"]
 readme = "README.md"
 
 packages = [
-    { include = "app" }
+    { include = "./app" } # Incluir el directorio de la aplicación
 ]
 
 [tool.poetry.dependencies]
-python = "^3.13"
-poetry-core = "^2.2.1"
-fastapi = "^0.117.1"
-uvicorn = { extras = ["standard"], version = "^0.37.0" }
-sqlmodel = "^0.0.25"
-psycopg2-binary = "^2.9.8"
-passlib = "^1.7.4"
-
+python = "^3.13" # Versión mínima de Python
+poetry-core = "^2.2.1" # Herramienta de construcción
+fastapi = "^0.117.1" # Framework web moderno y rápido
+uvicorn = { extras = ["standard"], version = "^0.37.0" } # Servidor ASGI
+sqlmodel = "^0.0.25" # ORM basado en SQLAlchemy y Pydantic
+psycopg2-binary = "^2.9.8" # Driver para PostgreSQL
+python-dotenv = "^1.0.0"  # Para variables de entorno
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core"] # Requiere poetry-core para construir el paquete
 build-backend = "poetry.core.masonry.api"
