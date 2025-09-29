@@ -1,4 +1,5 @@
-from sqlmodel import create_engine, Session, select
+from sqlmodel import create_engine, Session, select  # Object Relational Mapper (ORM) para bases de datos SQL
+
 from app.core.config import settings
 from app.db.base import Base
 

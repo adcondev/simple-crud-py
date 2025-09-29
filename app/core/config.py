@@ -1,8 +1,9 @@
-# Configuración centralizada de la aplicación
-import os
-from dotenv import load_dotenv
+""" Configuración centralizada de la aplicación """
+import os  # os es un módulo estándar para interactuar con el sistema operativo
 
-# Cargar variables de entorno desde .env.dev
+from dotenv import load_dotenv  # Cargar variables de entorno desde archivos .env
+
+# Cargar variables de entorno desde .env.dev, crearlo en base a .env.example
 load_dotenv("./.env.dev")
 
 

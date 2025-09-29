@@ -1,36 +1,47 @@
 {
-  "name": "Python FastAPI Development",
-  "dockerComposeFile": "./docker-compose.yml",
-  // Usa la versión .dev
+  "name": "Python FastAPI Dev Container",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/app",
-  // Configuración mínima para VSCode
+  "shutdownAction": "stopCompose",
+
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
-        // Soporte para Python
-        "ms-python.vscode-pylance",
-        // IntelliSense avanzado
-        "ms-azuretools.vscode-docker",
-        // Gestión de contenedores
-        "github.copilot"
-        // Asistente de código
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "ms-python.pylint",
+        "charliermarsh.ruff"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "terminal.integrated.shell.linux": "/bin/bash"
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.linting.flake8Enabled": true,
+        "python.linting.mypyEnabled": true,
+        "editor.formatOnSave": true
       }
     }
   },
-  // Puertos que se expondrán automáticamente
   "forwardPorts": [
     8000,
     5432
   ],
-  // Comando que se ejecuta después de crear el contenedor
-  // Instala dependencias una vez que los archivos están montados
-  "postCreateCommand": "poetry install --no-interaction && echo '🚀 DevContainer listo! Ejecuta: fastapi dev app/main.py'",
-  // Configuración del usuario dentro del contenedor
+  "portsAttributes": {
+    "8000": {
+      "label": "FastAPI App",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database"
+    }
+  },
+  "postCreateCommand": "poetry install",
+
   "remoteUser": "root"
 }
+

@@ -7,14 +7,19 @@ services:
     build:
       context: . # Cambiar a directorio raíz donde está pyproject.toml
       dockerfile: Dockerfile # Especificar la ruta completa al Dockerfile
+    volumes:
+      - .:/app # /app dentro del contenedor, los cambios en el host se reflejan aquí
     ports:
       - "8000:8000" # Mapea el puerto 8000 del contenedor al puerto 8000 del host
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db/simple_crud_db
-      - ENVIRONMENT=prod # Variable para identificar entorno de producción
+      - ENVIRONMENT=dev # Variable para identificar entorno de desarrollo
+      - DEBUG=true # Habilita modo debug para desarrollo
+      - RELOAD=true # Habilita auto-reload para desarrollo
     depends_on:
-      - db # Asegura que el servicio de la base de datos se inicie antes que la app
-    restart: unless-stopped # Reinicia el contenedor a menos que se detenga manualmente
+      db:
+        condition: service_healthy # Espera a que la DB esté completamente lista
+    restart: unless-stopped # Reinicia automáticamente en caso de fallos
 
   # Servicio de la base de datos PostgreSQL, te lo instala y configura automáticamente
   db:

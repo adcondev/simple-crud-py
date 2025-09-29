@@ -14,8 +14,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # RUN ejecuta comandos en el contenedor durante la construcción
-# Instala dependencias del sistema necesarias
-# El contenedor
+# Instala dependencias del sistema necesarias para producción
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
@@ -45,7 +44,7 @@ RUN poetry config virtualenvs.create false
 # Poetry permite replicar el entorno de desarrollo fácilmente, te lo recomiendo mucho.
 # --no-interaction evita que Poetry pida confirmaciones interactivas
 # --no-ansi desactiva los códigos de color en la salida para que los logs sean más limpios
-# Instala solo las dependencias (sin instalar el proyecto actual)
+# --no-root es para que no instale el proyecto actual, solo las dependencias
 RUN poetry install --no-interaction --no-ansi --no-root
 
 # Finalmente, copia el resto del código de la aplicación al contenedor
@@ -58,5 +57,4 @@ RUN poetry install --no-interaction --no-ansi --only-root
 EXPOSE 8000
 
 # CMD especifica el comando por defecto para ejecutar cuando se inicia el contenedor
-CMD ["fastapi", "run", "app/main.py"]
-
+CMD ["fastapi", "dev", "app/main.py"]
